@@ -4,6 +4,7 @@ import {
   login,
   refreshAccessToken
 } from '../../features/account/account-connection';
+import LoadingOverlay from '../loading-overlay';
 
 export default function LoginPage() {
   const location = useLocation();
@@ -19,7 +20,10 @@ export default function LoginPage() {
     const initialUsername = location.state?.username;
     const initialPassword = location.state?.password;
 
+    const refreshToken = localStorage.getItem('refreshToken');
     if (initialUsername && initialPassword) handleLoginFromRegisterPage();
+    else if (refreshToken) handleLoginWithRefreshToken(refreshToken);
+
     async function handleLoginFromRegisterPage() {
       setUsername(initialUsername);
       setPassword(initialPassword);
@@ -31,9 +35,6 @@ export default function LoginPage() {
       else setError('Invalid username or password');
     }
 
-    // If there's a refresh token in localStorage, try to login with it
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (refreshToken) handleLoginWithRefreshToken(refreshToken);
     async function handleLoginWithRefreshToken(refreshToken) {
       setInProgress(true);
       const refreshAccessTokenSuccess = await refreshAccessToken(refreshToken);
@@ -49,7 +50,7 @@ export default function LoginPage() {
 
   return (
     <div className="LoginPage">
-      {inProgress && <div>In Progress</div>}
+      {inProgress && <LoadingOverlay />}
 
       <h1>Login Page</h1>
 

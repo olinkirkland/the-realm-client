@@ -63,11 +63,10 @@ export async function logout() {
   let response;
   try {
     response = await axios.delete('/logout', {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`
-      }
+      data: { refreshToken }
     });
   } catch (error) {}
+  localStorage.removeItem('refreshToken');
 
   return !!response;
 }
@@ -82,4 +81,13 @@ export async function register(username, password) {
   } catch (error) {}
 
   return !!response;
+}
+
+export async function getAccount() {
+  let response;
+  try {
+    response = await axios.get('/account');
+  } catch (error) {}
+
+  return response;
 }

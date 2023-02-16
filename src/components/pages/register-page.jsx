@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../features/account/account-connection';
+import LoadingOverlay from '../loading-overlay';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function RegisterPage() {
 
   return (
     <div className="RegisterPage">
-      {inProgress && <div>In Progress</div>}
+      {inProgress && <LoadingOverlay />}
 
       <h1>Sign Up</h1>
 
