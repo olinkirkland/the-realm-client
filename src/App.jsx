@@ -6,6 +6,9 @@ import AccountPage from './components/pages/account-page';
 import GamePage from './components/pages/game-page';
 
 import './assets/styles/css/styles.css';
+import './assets/styles/css/button.css';
+import './assets/styles/css/input.css';
+
 import RegisterPage from './components/pages/register-page';
 
 function App() {

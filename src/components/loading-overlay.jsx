@@ -1,10 +1,12 @@
 import React from 'react';
 import '../assets/styles/css/loading-overlay.css';
 
-export default function LoadingOverlay() {
+export default function LoadingOverlay({ text }) {
   return (
-    <div className="loading-overlay">
-      <span>Please wait...</span>
-    </div>
+    text && (
+      <div className="loading-overlay">
+        <span>{text}</span>
+      </div>
+    )
   );
 }

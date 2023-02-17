@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   login,
-  refreshAccessToken
+  requestNewAccessToken,
+  refreshToken
 } from '../../features/account/account-connection';
 import LoadingOverlay from '../loading-overlay';
 
@@ -10,7 +11,7 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [inProgress, setInProgress] = useState(false);
+  const [inProgress, setInProgress] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -20,26 +21,27 @@ export default function LoginPage() {
     const initialUsername = location.state?.username;
     const initialPassword = location.state?.password;
 
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (initialUsername && initialPassword) handleLoginFromRegisterPage();
+    if (initialUsername && initialPassword) handleLogin();
     else if (refreshToken) handleLoginWithRefreshToken(refreshToken);
 
-    async function handleLoginFromRegisterPage() {
+    async function handleLogin() {
       setUsername(initialUsername);
       setPassword(initialPassword);
 
-      setInProgress(true);
+      setInProgress('Logging in');
       const loginSuccess = await login(initialUsername, initialPassword);
-      setInProgress(false);
+      setInProgress();
       if (loginSuccess) navigate('/account');
       else setError('Invalid username or password');
     }
 
     async function handleLoginWithRefreshToken(refreshToken) {
-      setInProgress(true);
-      const refreshAccessTokenSuccess = await refreshAccessToken(refreshToken);
-      setInProgress(false);
-      if (refreshAccessTokenSuccess) {
+      setInProgress('Logging in');
+      const getNewAccessTokenSuccess = await requestNewAccessToken(
+        refreshToken
+      );
+      setInProgress();
+      if (getNewAccessTokenSuccess) {
         navigate('/account');
       } else {
         setError('Invalid refresh token, please login again');
@@ -50,7 +52,7 @@ export default function LoginPage() {
 
   return (
     <div className="LoginPage">
-      {inProgress && <LoadingOverlay />}
+      <LoadingOverlay text={inProgress} />
 
       <h1>Login Page</h1>
 
@@ -70,9 +72,9 @@ export default function LoginPage() {
 
       <button
         onClick={async () => {
-          setInProgress(true);
+          setInProgress('Logging in');
           const isLoginSuccessful = await login(username, password);
-          setInProgress(false);
+          setInProgress();
           if (isLoginSuccessful) navigate('/account');
           else setError('Invalid username or password');
         }}

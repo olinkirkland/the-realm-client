@@ -6,14 +6,14 @@ import LoadingOverlay from '../loading-overlay';
 export default function RegisterPage() {
   const navigate = useNavigate();
 
-  const [inProgress, setInProgress] = useState(false);
+  const [inProgress, setInProgress] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
   return (
     <div className="RegisterPage">
-      {inProgress && <LoadingOverlay />}
+      <LoadingOverlay text={inProgress} />
 
       <h1>Sign Up</h1>
 
@@ -33,9 +33,9 @@ export default function RegisterPage() {
 
       <button
         onClick={async () => {
-          setInProgress(true);
+          setInProgress('Registering');
           const isRegisterSuccessful = await register(username, password);
-          setInProgress(false);
+          setInProgress();
           if (isRegisterSuccessful) {
             localStorage.removeItem('refreshToken');
             navigate('/login', { state: { username, password } });

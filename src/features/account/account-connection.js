@@ -2,10 +2,25 @@ import axios from 'axios';
 
 const server = 'http://localhost:3000';
 
-let accessToken = null;
-let refreshToken = null;
+export let refreshToken = localStorage.getItem('refreshToken');
 
 axios.defaults.baseURL = server;
+
+// Add an interceptor to refresh the access token
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const getNewAccessTokenSuccess = await requestNewAccessToken();
+      if (!getNewAccessTokenSuccess) return Promise.reject(error);
+
+      // Returns the original request with the new access token
+      return axios(error.config);
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export async function login(username, password) {
   let response;
@@ -20,40 +35,24 @@ export async function login(username, password) {
 
   refreshToken = response.data.refreshToken;
   localStorage.setItem('refreshToken', refreshToken);
-
-  axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-  // Add an interceptor to refresh the access token
-  axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      if (error.response.status === 401) {
-        const response = await refreshAccessToken();
-        if (response) {
-          refreshToken = response.data.refreshToken;
-          axios.defaults.headers.common[
-            'Authorization'
-          ] = `Bearer ${accessToken}`;
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
+  requestNewAccessToken();
 
   return !!response;
 }
 
-export async function refreshAccessToken(newRefreshToken = null) {
+export async function requestNewAccessToken(newRefreshToken = null) {
   if (newRefreshToken) refreshToken = newRefreshToken;
 
   let response;
 
   try {
-    response = await axios.get('/refresh', {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`
-      }
+    response = await axios.post('/refresh', {
+      refreshToken: refreshToken
     });
+
+    axios.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${response.data.accessToken}`;
   } catch (error) {}
 
   return !!response;
@@ -66,6 +65,7 @@ export async function logout() {
       data: { refreshToken }
     });
   } catch (error) {}
+  refreshToken = null;
   localStorage.removeItem('refreshToken');
 
   return !!response;
@@ -86,8 +86,12 @@ export async function register(username, password) {
 export async function getAccount() {
   let response;
   try {
+    // Make a request with an access token
     response = await axios.get('/account');
-  } catch (error) {}
+  } catch (error) {
+    await logout();
+    return null;
+  }
 
-  return response;
+  return response.data;
 }
