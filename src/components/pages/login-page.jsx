@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   login,
   requestNewAccessToken,
-  refreshToken
+  getRefreshToken
 } from '../../features/account/account-connection';
 import LoadingOverlay from '../loading-overlay';
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
     const initialPassword = location.state?.password;
 
     if (initialUsername && initialPassword) handleLogin();
-    else if (refreshToken) handleLoginWithRefreshToken(refreshToken);
+    else if (getRefreshToken()) handleLoginWithRefreshToken(getRefreshToken());
 
     async function handleLogin() {
       setUsername(initialUsername);

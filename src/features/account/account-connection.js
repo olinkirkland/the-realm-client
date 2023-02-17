@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const server = 'http://localhost:3000';
 
-export let refreshToken = localStorage.getItem('refreshToken');
+let refreshToken = localStorage.getItem('refreshToken');
 
 axios.defaults.baseURL = server;
 
@@ -94,4 +94,8 @@ export async function getAccount() {
   }
 
   return response.data;
+}
+
+export function getRefreshToken() {
+  return refreshToken;
 }
