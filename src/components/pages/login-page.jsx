@@ -1,3 +1,4 @@
+import Logo from '../logo';
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -6,6 +7,7 @@ import {
   getRefreshToken
 } from '../../features/account/account-connection';
 import LoadingOverlay from '../loading-overlay';
+import Alert from '../alert';
 
 export default function LoginPage() {
   const location = useLocation();
@@ -51,44 +53,64 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div className="LoginPage">
+    <div className="page page--login">
       <LoadingOverlay text={inProgress} />
+      <Logo />
 
-      <h1>Login Page</h1>
+      <div className="page__content">
+        <h2>Enter your username and password to login.</h2>
 
-      <input
-        type="text"
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+        <section>
+          <input
+            type="text"
+            placeholder="Username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={({ key }) => {
+              if (key === 'Enter')
+                document.querySelector('#login-button').click();
+            }}
+          />
 
-      <div>{error && <span>{error}</span>}</div>
+          {error && (
+            <Alert type="error" setText={setError}>
+              {error}
+            </Alert>
+          )}
+        </section>
+        <section>
+          <button
+            id="login-button"
+            className="btn btn--primary"
+            onClick={async () => {
+              setInProgress('Logging in');
+              const isLoginSuccessful = await login(username, password);
+              setInProgress();
+              if (isLoginSuccessful) navigate('/account');
+              else setError('Invalid username or password');
+            }}
+          >
+            Login
+          </button>
 
-      <button
-        onClick={async () => {
-          setInProgress('Logging in');
-          const isLoginSuccessful = await login(username, password);
-          setInProgress();
-          if (isLoginSuccessful) navigate('/account');
-          else setError('Invalid username or password');
-        }}
-      >
-        Login
-      </button>
-
-      <button
-        onClick={() => {
-          navigate('/register');
-        }}
-      >
-        Don't have an account? Sign up
-      </button>
+          <div className="flex">
+            <p>Don't have an account?</p>
+            <button
+              className="btn btn--secondary"
+              onClick={() => {
+                navigate('/register');
+              }}
+            >
+              Sign up
+            </button>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

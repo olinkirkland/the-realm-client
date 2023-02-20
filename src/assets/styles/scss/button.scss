@@ -1,8 +1,27 @@
-button {
-  padding: 0.8rem 1.2rem;
+@import 'colors';
+
+button.btn {
+  padding: 0.8rem 1.2em;
   border: none;
-  border-radius: 0.4rem;
   cursor: pointer;
-  transition: all 0.2s;
   font-size: 1.6rem;
+  border-radius: px;
+  background-color: $color-white-transparent;
+  color: $color-white;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button.btn--primary {
+  background-color: $color-primary;
+  color: $color-secondary;
+  border: 1px solid $color-secondary-light;
+}
+
+button.btn--secondary {
+  background-color: $color-secondary-light;
+  color: $color-white;
+  border: 1px solid $color-white-transparent;
 }

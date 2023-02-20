@@ -1,0 +1,21 @@
+@import 'colors';
+
+.alert {
+  width: 100%;
+  padding: 1.2rem;
+  border-radius: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #721c24;
+  background-color: #f8d7da;
+
+  button.alert__close {
+    background-color: transparent;
+    cursor: pointer;
+    color: #721c24;
+    align-items: center;
+    border: none;
+    margin-right: 0.6rem;
+  }
+}

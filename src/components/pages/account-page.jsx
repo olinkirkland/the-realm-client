@@ -13,7 +13,7 @@ export default function AccountPage() {
   const [accountData, setAccountData] = useState({});
 
   return (
-    <div className="AccountPage">
+    <div className="page page--account">
       <LoadingOverlay text={inProgress} />
       <h1>Account Page</h1>
       <button

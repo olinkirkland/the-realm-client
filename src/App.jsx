@@ -8,6 +8,9 @@ import GamePage from './components/pages/game-page';
 import './assets/styles/css/styles.css';
 import './assets/styles/css/button.css';
 import './assets/styles/css/input.css';
+import './assets/styles/css/onboarding.css';
+import './assets/styles/css/alert.css';
+import './assets/styles/css/account.css';
 
 import RegisterPage from './components/pages/register-page';
 import { getRefreshToken } from './features/account/account-connection';
@@ -23,14 +26,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/game" element={<GamePage />} />
+          <Route path="/game/:id" element={<GamePage />} />
           <Route path="*" element={<h1>404</h1>} />
         </Routes>
       </Router>
 
       <footer>
         {(refreshToken && <pre>{refreshToken}</pre>) || <p>no refresh token</p>}
-        <button
+        <button className='btn btn--secondary'
           onClick={() =>
             setRefreshToken(getRefreshToken()?.split('.')[2].substring(0, 6))
           }

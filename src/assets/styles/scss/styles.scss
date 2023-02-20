@@ -1,9 +1,8 @@
+@import 'colors';
+@import 'fonts';
+
 html {
   font-size: 62.5%;
-}
-
-body {
-  margin: 2rem;
 }
 
 * {
@@ -13,8 +12,44 @@ body {
   list-style: none;
 
   font-size: 1.6rem;
+  font-family: 'Gloock', sans-serif;
+  font-weight: 400;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.flex {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.full-width {
+  width: 100%;
 }
 
 footer {
-  margin-top: 12rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-white-transparent;
+  padding: 1.2rem;
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+h1.logo {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  padding: 2rem;
+  color: $color-white;
+  width: fit-content;
 }
